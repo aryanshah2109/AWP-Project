@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Student Dashboard | College ERP</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="page-shell student-shell">
+      <header class="hero">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">College ERP</p>
+            <h1>Student Dashboard</h1>
+          </div>
+          <button id="logoutButton" class="secondary" type="button">Logout</button>
+        </div>
+        <p id="welcomeText" class="hero-copy"></p>
+      </header>
+
+      <main class="student-layout">
+        <section class="card">
+          <h2>Your Profile</h2>
+          <div id="studentDetails" class="student-details"></div>
+        </section>
+
+        <section class="card">
+          <h2>Your Attendance</h2>
+          <div id="studentAttendanceSummary" class="report-list"></div>
+        </section>
+      </main>
+    </div>
+
+    <script src="shared.js"></script>
+    <script src="student-dashboard.js"></script>
+  </body>
+</html>

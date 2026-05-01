@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Dashboard | College ERP</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="dashboard-shell">
+      <aside class="sidebar">
+        <div>
+          <p class="eyebrow">College ERP</p>
+          <h1 class="sidebar-title">Admin Dashboard</h1>
+        </div>
+        <nav class="sidebar-nav">
+          <button id="studentsModuleTab" class="tab active" type="button">Students</button>
+          <button id="facultyModuleTab" class="tab" type="button">Faculty</button>
+          <button id="attendanceModuleTab" class="tab" type="button">Attendance</button>
+        </nav>
+        <div class="sidebar-footer">
+          <p id="welcomeText" class="sidebar-copy"></p>
+          <button id="logoutButton" class="secondary" type="button">Logout</button>
+        </div>
+      </aside>
+
+      <main class="dashboard-main">
+        <section id="studentsModule" class="card module-panel">
+          <h2>Student Management</h2>
+          <form id="studentForm" class="grid-form">
+            <input type="hidden" id="studentId" />
+            <input type="text" id="name" placeholder="Student name" required />
+            <input type="text" id="enrollmentNo" placeholder="Enrollment number" required />
+            <input type="email" id="email" placeholder="Email" required />
+            <input type="text" id="department" placeholder="Department" required />
+            <input type="number" id="semester" placeholder="Semester" min="1" max="8" required />
+            <input type="text" id="password" placeholder="Password" required />
+            <button type="submit" id="saveButton">Add Student</button>
+            <button type="button" id="cancelEdit" class="secondary hidden">Cancel Edit</button>
+          </form>
+          <p id="adminMessage" class="message"></p>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Enrollment</th>
+                  <th>Email</th>
+                  <th>Department</th>
+                  <th>Semester</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="studentTableBody"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <section id="facultyModule" class="card module-panel hidden">
+          <h2>Faculty Management</h2>
+          <form id="facultyForm" class="grid-form">
+            <input type="hidden" id="facultyDocumentId" />
+            <input type="text" id="facultyId" placeholder="Faculty ID" required />
+            <input type="text" id="facultyName" placeholder="Faculty name" required />
+            <input type="email" id="facultyEmail" placeholder="Faculty email" required />
+            <input type="text" id="facultyPhone" placeholder="Phone number" required />
+            <input type="text" id="facultyDepartment" placeholder="Department" required />
+            <input type="text" id="facultyQualification" placeholder="Qualification" required />
+            <input type="text" id="facultyPassword" placeholder="Faculty password" required />
+            <input type="text" id="facultySubjects" placeholder="Subjects, comma separated" required />
+            <input type="number" id="facultyWorkload" placeholder="Workload hours" min="0" required />
+            <input type="number" id="facultyLeaveTaken" placeholder="Leave taken" min="0" />
+            <input type="number" id="facultyLeaveBalance" placeholder="Leave balance" min="0" />
+            <input type="number" id="facultyDaysPresent" placeholder="Days present" min="0" />
+            <input type="number" id="facultyDaysTotal" placeholder="Days total" min="0" />
+            <button type="submit" id="facultySaveButton">Add Faculty</button>
+            <button type="button" id="cancelFacultyEdit" class="secondary hidden">Cancel Edit</button>
+          </form>
+          <p id="facultyMessage" class="message"></p>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Faculty ID</th>
+                  <th>Qualification</th>
+                  <th>Subject Allocation</th>
+                  <th>Workload</th>
+                  <th>Leave</th>
+                  <th>Attendance</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="facultyTableBody"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <section id="attendanceModule" class="card module-panel hidden">
+          <h2>Attendance Management</h2>
+          <form id="attendanceForm" class="grid-form">
+            <input type="hidden" id="attendanceId" />
+            <select id="attendanceStudent" required></select>
+            <select id="attendanceFaculty">
+              <option value="">Select faculty (optional)</option>
+            </select>
+            <input type="text" id="attendanceSubject" placeholder="Subject" required />
+            <input type="date" id="attendanceDate" required />
+            <select id="attendanceStatus" required>
+              <option value="Present">Present</option>
+              <option value="Absent">Absent</option>
+            </select>
+            <input type="text" id="attendanceRemarks" placeholder="Remarks" />
+            <button type="submit" id="attendanceSaveButton">Mark Attendance</button>
+            <button type="button" id="cancelAttendanceEdit" class="secondary hidden">Cancel Edit</button>
+          </form>
+          <p id="attendanceMessage" class="message"></p>
+          <div class="report-grid">
+            <div class="report-card">
+              <h4>Student-wise Report</h4>
+              <div id="studentWiseReport" class="report-list"></div>
+            </div>
+            <div class="report-card">
+              <h4>Subject-wise Report</h4>
+              <div id="subjectWiseReport" class="report-list"></div>
+            </div>
+            <div class="report-card">
+              <h4>Attendance Alerts</h4>
+              <div id="attendanceAlerts" class="report-list"></div>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Student</th>
+                  <th>Subject</th>
+                  <th>Status</th>
+                  <th>Faculty</th>
+                  <th>Remarks</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="attendanceTableBody"></tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="shared.js"></script>
+    <script src="admin-dashboard.js"></script>
+  </body>
+</html>
