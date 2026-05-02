@@ -14,6 +14,7 @@ A basic College ERP project with:
 - Student-wise attendance reports
 - Subject-wise attendance reports
 - Attendance shortage alerts
+- Share resources
 
 ## Tech Stack
 
