@@ -359,3 +359,86 @@ th {
     grid-template-columns: 1fr;
   }
 }
+
+/* Add to public/styles.css */
+
+/* Resource Management Styles */
+.resource-stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.stat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 20px;
+  text-align: center;
+}
+
+.stat-card h4 {
+  margin: 0 0 8px 0;
+  color: var(--muted);
+}
+
+.stat-card p {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: bold;
+  color: var(--accent);
+}
+
+.filter-bar {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.filter-bar select,
+.filter-bar input {
+  flex: 1;
+  min-width: 150px;
+}
+
+.resource-table td {
+  max-width: 200px;
+  word-wrap: break-word;
+}
+
+textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--surface-strong);
+  font-family: inherit;
+  resize: vertical;
+}
+
+/* Profile Form Styles */
+#profileForm {
+  margin-top: 20px;
+  border-top: 1px solid var(--border);
+  padding-top: 20px;
+}
+
+/* Button Group Styles */
+.action-buttons {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+button.secondary {
+  background: transparent;
+  color: var(--ink);
+  border: 1px solid var(--border);
+}
+
+button.secondary:hover {
+  background: rgba(13, 110, 110, 0.1);
+  border-color: var(--accent);
+}

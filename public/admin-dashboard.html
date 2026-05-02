@@ -1,3 +1,4 @@
+<!-- public/admin-dashboard.html -->
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -17,6 +18,7 @@
           <button id="studentsModuleTab" class="tab active" type="button">Students</button>
           <button id="facultyModuleTab" class="tab" type="button">Faculty</button>
           <button id="attendanceModuleTab" class="tab" type="button">Attendance</button>
+          <button id="resourcesModuleTab" class="tab" type="button">Resources</button>
         </nav>
         <div class="sidebar-footer">
           <p id="welcomeText" class="sidebar-copy"></p>
@@ -34,6 +36,8 @@
             <input type="email" id="email" placeholder="Email" required />
             <input type="text" id="department" placeholder="Department" required />
             <input type="number" id="semester" placeholder="Semester" min="1" max="8" required />
+            <input type="text" id="phone" placeholder="Phone number" />
+            <input type="text" id="address" placeholder="Address" />
             <input type="text" id="password" placeholder="Password" required />
             <button type="submit" id="saveButton">Add Student</button>
             <button type="button" id="cancelEdit" class="secondary hidden">Cancel Edit</button>
@@ -48,6 +52,7 @@
                   <th>Email</th>
                   <th>Department</th>
                   <th>Semester</th>
+                  <th>Phone</th>
                   <th>Actions</th>
                 </tr>
               </thead>
@@ -73,6 +78,7 @@
             <input type="number" id="facultyLeaveBalance" placeholder="Leave balance" min="0" />
             <input type="number" id="facultyDaysPresent" placeholder="Days present" min="0" />
             <input type="number" id="facultyDaysTotal" placeholder="Days total" min="0" />
+            <input type="text" id="facultyAddress" placeholder="Address" />
             <button type="submit" id="facultySaveButton">Add Faculty</button>
             <button type="button" id="cancelFacultyEdit" class="secondary hidden">Cancel Edit</button>
           </form>
@@ -143,6 +149,37 @@
                 </tr>
               </thead>
               <tbody id="attendanceTableBody"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <section id="resourcesModule" class="card module-panel hidden">
+          <h2>Course Resources</h2>
+          <div class="resource-stats">
+            <div class="stat-card">
+              <h4>Total Resources</h4>
+              <p id="totalResources">0</p>
+            </div>
+            <div class="stat-card">
+              <h4>Total Downloads</h4>
+              <p id="totalDownloads">0</p>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Title</th>
+                  <th>Subject</th>
+                  <th>Type</th>
+                  <th>Uploaded By</th>
+                  <th>Department</th>
+                  <th>Semester</th>
+                  <th>Downloads</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="resourcesTableBody"></tbody>
             </table>
           </div>
         </section>

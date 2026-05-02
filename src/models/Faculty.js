@@ -1,3 +1,4 @@
+// src/models/Faculty.js
 const mongoose = require("mongoose");
 
 const facultySchema = new mongoose.Schema(
@@ -67,6 +68,15 @@ const facultySchema = new mongoose.Schema(
       type: Number,
       default: 0,
       min: 0
+    },
+    address: {
+      type: String,
+      trim: true,
+      default: ""
+    },
+    profilePicture: {
+      type: String,
+      default: ""
     }
   },
   {

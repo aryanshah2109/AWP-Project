@@ -1,3 +1,4 @@
+<!-- public/student-dashboard.html -->
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -7,27 +8,94 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <div class="page-shell student-shell">
-      <header class="hero">
-        <div class="section-head">
-          <div>
-            <p class="eyebrow">College ERP</p>
-            <h1>Student Dashboard</h1>
-          </div>
+    <div class="dashboard-shell">
+      <aside class="sidebar">
+        <div>
+          <p class="eyebrow">College ERP</p>
+          <h1 class="sidebar-title">Student Dashboard</h1>
+        </div>
+        <nav class="sidebar-nav">
+          <button id="profileModuleTab" class="tab active" type="button">My Profile</button>
+          <button id="attendanceModuleTab" class="tab" type="button">Attendance</button>
+          <button id="resourcesModuleTab" class="tab" type="button">Resources</button>
+        </nav>
+        <div class="sidebar-footer">
+          <p id="welcomeText" class="sidebar-copy"></p>
           <button id="logoutButton" class="secondary" type="button">Logout</button>
         </div>
-        <p id="welcomeText" class="hero-copy"></p>
-      </header>
+      </aside>
 
-      <main class="student-layout">
-        <section class="card">
-          <h2>Your Profile</h2>
+      <main class="dashboard-main">
+        <section id="profileModule" class="card module-panel">
+          <h2>My Profile</h2>
           <div id="studentDetails" class="student-details"></div>
+          <form id="profileForm" class="grid-form">
+            <input type="text" id="profileName" placeholder="Full Name" required />
+            <input type="email" id="profileEmail" placeholder="Email" required />
+            <input type="text" id="profilePhone" placeholder="Phone Number" />
+            <input type="text" id="profileAddress" placeholder="Address" />
+            <input type="password" id="profileCurrentPassword" placeholder="Current Password" />
+            <input type="password" id="profileNewPassword" placeholder="New Password" />
+            <input type="password" id="profileConfirmPassword" placeholder="Confirm New Password" />
+            <button type="submit" id="profileSaveButton">Update Profile</button>
+          </form>
+          <p id="profileMessage" class="message"></p>
         </section>
 
-        <section class="card">
-          <h2>Your Attendance</h2>
+        <section id="attendanceModule" class="card module-panel hidden">
+          <h2>My Attendance</h2>
           <div id="studentAttendanceSummary" class="report-list"></div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Subject</th>
+                  <th>Status</th>
+                  <th>Faculty</th>
+                </tr>
+              </thead>
+              <tbody id="attendanceRecordsBody"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <section id="resourcesModule" class="card module-panel hidden">
+          <h2>Course Resources</h2>
+          <div class="filter-bar">
+            <select id="filterSubject">
+              <option value="">All Subjects</option>
+            </select>
+            <select id="filterSemester">
+              <option value="">All Semesters</option>
+              <option value="1">Semester 1</option>
+              <option value="2">Semester 2</option>
+              <option value="3">Semester 3</option>
+              <option value="4">Semester 4</option>
+              <option value="5">Semester 5</option>
+              <option value="6">Semester 6</option>
+              <option value="7">Semester 7</option>
+              <option value="8">Semester 8</option>
+            </select>
+            <button id="filterButton" class="secondary">Filter</button>
+          </div>
+          <div class="table-wrap">
+            <table class="resource-table">
+              <thead>
+                <tr>
+                  <th>Title</th>
+                  <th>Description</th>
+                  <th>Subject</th>
+                  <th>Type</th>
+                  <th>Uploaded By</th>
+                  <th>Semester</th>
+                  <th>Downloads</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="resourcesTableBody"></tbody>
+            </table>
+          </div>
         </section>
       </main>
     </div>

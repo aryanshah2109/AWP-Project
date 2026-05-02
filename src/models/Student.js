@@ -1,3 +1,4 @@
+// src/models/Student.js
 const mongoose = require("mongoose");
 
 const studentSchema = new mongoose.Schema(
@@ -34,6 +35,20 @@ const studentSchema = new mongoose.Schema(
       type: String,
       required: true,
       trim: true
+    },
+    phone: {
+      type: String,
+      trim: true,
+      default: ""
+    },
+    address: {
+      type: String,
+      trim: true,
+      default: ""
+    },
+    profilePicture: {
+      type: String,
+      default: ""
     }
   },
   {

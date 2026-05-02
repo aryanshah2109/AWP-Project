@@ -1,3 +1,4 @@
+// public/admin-dashboard.js
 const adminSession = requireRole(["admin"]);
 
 if (adminSession) {
@@ -5,12 +6,15 @@ if (adminSession) {
   const studentsModuleTab = document.getElementById("studentsModuleTab");
   const facultyModuleTab = document.getElementById("facultyModuleTab");
   const attendanceModuleTab = document.getElementById("attendanceModuleTab");
+  const resourcesModuleTab = document.getElementById("resourcesModuleTab");
   const studentsModule = document.getElementById("studentsModule");
   const facultyModule = document.getElementById("facultyModule");
   const attendanceModule = document.getElementById("attendanceModule");
+  const resourcesModule = document.getElementById("resourcesModule");
   const studentTableBody = document.getElementById("studentTableBody");
   const facultyTableBody = document.getElementById("facultyTableBody");
   const attendanceTableBody = document.getElementById("attendanceTableBody");
+  const resourcesTableBody = document.getElementById("resourcesTableBody");
   const studentWiseReport = document.getElementById("studentWiseReport");
   const subjectWiseReport = document.getElementById("subjectWiseReport");
   const attendanceAlerts = document.getElementById("attendanceAlerts");
@@ -24,6 +28,8 @@ if (adminSession) {
   const cancelFacultyEdit = document.getElementById("cancelFacultyEdit");
   const cancelAttendanceEdit = document.getElementById("cancelAttendanceEdit");
   const logoutButton = document.getElementById("logoutButton");
+  const totalResourcesSpan = document.getElementById("totalResources");
+  const totalDownloadsSpan = document.getElementById("totalDownloads");
 
   const fields = {
     studentId: document.getElementById("studentId"),
@@ -32,6 +38,8 @@ if (adminSession) {
     email: document.getElementById("email"),
     department: document.getElementById("department"),
     semester: document.getElementById("semester"),
+    phone: document.getElementById("phone"),
+    address: document.getElementById("address"),
     password: document.getElementById("password")
   };
 
@@ -49,7 +57,8 @@ if (adminSession) {
     leaveTaken: document.getElementById("facultyLeaveTaken"),
     leaveBalance: document.getElementById("facultyLeaveBalance"),
     attendanceDaysPresent: document.getElementById("facultyDaysPresent"),
-    attendanceDaysTotal: document.getElementById("facultyDaysTotal")
+    attendanceDaysTotal: document.getElementById("facultyDaysTotal"),
+    address: document.getElementById("facultyAddress")
   };
 
   const attendanceFields = {
@@ -68,7 +77,8 @@ if (adminSession) {
     const config = [
       { tab: studentsModuleTab, panel: studentsModule, key: "students" },
       { tab: facultyModuleTab, panel: facultyModule, key: "faculty" },
-      { tab: attendanceModuleTab, panel: attendanceModule, key: "attendance" }
+      { tab: attendanceModuleTab, panel: attendanceModule, key: "attendance" },
+      { tab: resourcesModuleTab, panel: resourcesModule, key: "resources" }
     ];
 
     config.forEach(({ tab, panel, key }) => {
@@ -111,9 +121,11 @@ if (adminSession) {
                 <td>${student.email}</td>
                 <td>${student.department}</td>
                 <td>${student.semester}</td>
+                <td>${student.phone || "-"}</td>
                 <td>
                   <div class="action-buttons">
                     <button type="button" onclick="editStudent('${student._id}')">Edit</button>
+                    <button type="button" onclick="resetStudentPassword('${student._id}')" class="secondary">Reset Pwd</button>
                     <button type="button" class="danger" onclick="deleteStudent('${student._id}')">Delete</button>
                   </div>
                 </td>
@@ -121,7 +133,7 @@ if (adminSession) {
             `
           )
           .join("")
-      : '<tr><td colspan="6">No students added yet.</td></tr>';
+      : '<tr><td colspan="7">No students added yet.</td></tr>';
 
     attendanceFields.studentId.innerHTML = `
       <option value="">Select student</option>
@@ -154,6 +166,7 @@ if (adminSession) {
                 <td>
                   <div class="action-buttons">
                     <button type="button" onclick="editFaculty('${faculty._id}')">Edit</button>
+                    <button type="button" onclick="resetFacultyPassword('${faculty._id}')" class="secondary">Reset Pwd</button>
                     <button type="button" class="danger" onclick="deleteFaculty('${faculty._id}')">Delete</button>
                   </div>
                 </td>
@@ -197,6 +210,44 @@ if (adminSession) {
           )
           .join("")
       : '<tr><td colspan="7">No attendance records found.</td></tr>';
+  }
+
+  function renderResources(resources) {
+    if (!resources.length) {
+      resourcesTableBody.innerHTML = '<tr><td colspan="8">No resources uploaded yet.</td></tr>';
+      totalResourcesSpan.textContent = "0";
+      totalDownloadsSpan.textContent = "0";
+      return;
+    }
+
+    resourcesTableBody.innerHTML = resources
+      .map(
+        (resource) => `
+          <tr>
+            <td>${resource.title}</td>
+            <td>${resource.subject}</td>
+            <td>${resource.type}</td>
+            <td>${resource.uploaderName}</td>
+            <td>${resource.department}</td>
+            <td>${resource.semester || "All"}</td>
+            <td>${resource.downloads}</td>
+            <td>
+              <div class="action-buttons">
+                <a href="${resource.fileUrl}" download="${resource.fileName}" target="_blank">
+                  <button type="button" class="secondary">Download</button>
+                </a>
+                <button type="button" class="danger" onclick="deleteResource('${resource._id}')">Delete</button>
+              </div>
+            </td>
+          </tr>
+        `
+      )
+      .join("");
+
+    const totalResources = resources.length;
+    const totalDownloads = resources.reduce((sum, r) => sum + r.downloads, 0);
+    totalResourcesSpan.textContent = totalResources;
+    totalDownloadsSpan.textContent = totalDownloads;
   }
 
   function renderReportList(container, items, kind) {
@@ -248,19 +299,21 @@ if (adminSession) {
   }
 
   async function refreshData() {
-    const [students, faculty, attendance, studentReport, subjectReport, alerts] =
+    const [students, faculty, attendance, studentReport, subjectReport, alerts, resources] =
       await Promise.all([
         apiFetch("/api/students"),
         apiFetch("/api/faculty"),
         apiFetch("/api/attendance"),
         apiFetch("/api/reports/attendance/student-wise"),
         apiFetch("/api/reports/attendance/subject-wise"),
-        apiFetch("/api/reports/attendance/alerts")
+        apiFetch("/api/reports/attendance/alerts"),
+        apiFetch("/api/resources")
       ]);
 
     renderStudents(students.students);
     renderFaculty(faculty.faculty);
     renderAttendance(attendance.records);
+    renderResources(resources.resources);
     renderReportList(studentWiseReport, studentReport.report, "student");
     renderReportList(subjectWiseReport, subjectReport.report, "subject");
     renderReportList(attendanceAlerts, alerts.alerts, "alerts");
@@ -276,11 +329,30 @@ if (adminSession) {
       fields.email.value = student.email;
       fields.department.value = student.department;
       fields.semester.value = student.semester;
+      fields.phone.value = student.phone || "";
+      fields.address.value = student.address || "";
       fields.password.value = student.password;
       document.getElementById("saveButton").textContent = "Update Student";
       cancelEdit.classList.remove("hidden");
       setModule("students");
       showMessage(adminMessage, `Editing ${student.name}.`);
+    } catch (error) {
+      showMessage(adminMessage, error.message, true);
+    }
+  }
+
+  async function resetStudentPassword(id) {
+    const newPassword = prompt("Enter new password for student:");
+    if (!newPassword) return;
+
+    try {
+      const data = await apiFetch(`/api/students/${id}/reset-password`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ password: newPassword })
+      });
+      showMessage(adminMessage, data.message);
+      await refreshData();
     } catch (error) {
       showMessage(adminMessage, error.message, true);
     }
@@ -319,10 +391,28 @@ if (adminSession) {
       facultyFields.leaveBalance.value = faculty.leaveBalance;
       facultyFields.attendanceDaysPresent.value = faculty.attendanceDaysPresent;
       facultyFields.attendanceDaysTotal.value = faculty.attendanceDaysTotal;
+      facultyFields.address.value = faculty.address || "";
       document.getElementById("facultySaveButton").textContent = "Update Faculty";
       cancelFacultyEdit.classList.remove("hidden");
       setModule("faculty");
       showMessage(facultyMessage, `Editing ${faculty.name}.`);
+    } catch (error) {
+      showMessage(facultyMessage, error.message, true);
+    }
+  }
+
+  async function resetFacultyPassword(id) {
+    const newPassword = prompt("Enter new password for faculty:");
+    if (!newPassword) return;
+
+    try {
+      const data = await apiFetch(`/api/faculty/${id}/reset-password`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ password: newPassword })
+      });
+      showMessage(facultyMessage, data.message);
+      await refreshData();
     } catch (error) {
       showMessage(facultyMessage, error.message, true);
     }
@@ -340,6 +430,20 @@ if (adminSession) {
       await refreshData();
     } catch (error) {
       showMessage(facultyMessage, error.message, true);
+    }
+  }
+
+  async function deleteResource(id) {
+    if (!window.confirm("Delete this resource?")) {
+      return;
+    }
+
+    try {
+      const data = await apiFetch(`/api/resources/${id}`, { method: "DELETE" });
+      showMessage(adminMessage, data.message);
+      await refreshData();
+    } catch (error) {
+      showMessage(adminMessage, error.message, true);
     }
   }
 
@@ -381,6 +485,7 @@ if (adminSession) {
   studentsModuleTab.addEventListener("click", () => setModule("students"));
   facultyModuleTab.addEventListener("click", () => setModule("faculty"));
   attendanceModuleTab.addEventListener("click", () => setModule("attendance"));
+  resourcesModuleTab.addEventListener("click", () => setModule("resources"));
 
   studentForm.addEventListener("submit", async (event) => {
     event.preventDefault();
@@ -398,6 +503,8 @@ if (adminSession) {
           email: fields.email.value.trim(),
           department: fields.department.value.trim(),
           semester: Number(fields.semester.value),
+          phone: fields.phone.value.trim(),
+          address: fields.address.value.trim(),
           password: fields.password.value.trim()
         })
       });
@@ -436,7 +543,8 @@ if (adminSession) {
           leaveTaken: Number(facultyFields.leaveTaken.value || 0),
           leaveBalance: Number(facultyFields.leaveBalance.value || 0),
           attendanceDaysPresent: Number(facultyFields.attendanceDaysPresent.value || 0),
-          attendanceDaysTotal: Number(facultyFields.attendanceDaysTotal.value || 0)
+          attendanceDaysTotal: Number(facultyFields.attendanceDaysTotal.value || 0),
+          address: facultyFields.address.value.trim()
         })
       });
 
@@ -498,10 +606,13 @@ if (adminSession) {
 
   window.editStudent = editStudent;
   window.deleteStudent = deleteStudent;
+  window.resetStudentPassword = resetStudentPassword;
   window.editFaculty = editFaculty;
   window.deleteFaculty = deleteFaculty;
+  window.resetFacultyPassword = resetFacultyPassword;
   window.editAttendance = editAttendance;
   window.deleteAttendance = deleteAttendance;
+  window.deleteResource = deleteResource;
 
   setModule("students");
   resetAttendanceForm();
